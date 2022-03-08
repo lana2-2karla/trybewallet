@@ -1,1 +1,6 @@
-// Coloque aqui suas actions
+const setLogin = (email) => ({
+  type: 'setLogin',
+  email,
+});
+
+export default setLogin;
