@@ -8,9 +8,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       email: action.payload,
     };
   default:
-    return {
-      state,
-    };
+    return state;
   }
 };
 export default userReducer;
