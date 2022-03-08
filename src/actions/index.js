@@ -1,6 +1,6 @@
-const setLogin = (email) => ({
+const setLogin = (payload) => ({
   type: 'setLogin',
-  email,
+  payload,
 });
 
 export default setLogin;

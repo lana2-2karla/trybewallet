@@ -5,7 +5,7 @@ import setLogin from '../actions';
 
 class Login extends React.Component {
     state = {
-      userEmail: '',
+      email: '',
       password: '',
     };
 
@@ -18,11 +18,11 @@ class Login extends React.Component {
 
     verifyEmailPassword = () => {
       // referência regex: https://www.horadecodar.com.br/2020/09/13/como-validar-email-com-javascript/
-      const { userEmail, password } = this.state;
+      const { email, password } = this.state;
       const regex = /\S+@\S+\.\S+/;
-      const regexEmail = regex.test(userEmail);
+      const regexEmail = regex.test(email);
       const NUMBER_SIX = 6;
-      if (password.lenght >= NUMBER_SIX && regexEmail) return false;
+      if (password.length >= NUMBER_SIX && regexEmail) return false;
       return true;
     };
 
@@ -43,19 +43,19 @@ class Login extends React.Component {
               type="email"
               name="email"
               placeholder="Digite seu email"
-              onChange={ this.handleChange() }
+              onChange={ this.handleChange }
             />
             <input
               data-testid="password-input"
               type="password"
               name="password"
               placeholder="Digite sua senha"
-              onChange={ this.handleChange() }
+              onChange={ this.handleChange }
             />
             <button
               type="submit"
-              disabled={ this.verifyEmailPassword }
-              onClick={ this.handleClick() }
+              disabled={ this.verifyEmailPassword() }
+              onClick={ this.handleClick }
             >
               Entrar
 
@@ -66,13 +66,13 @@ class Login extends React.Component {
     }
 }
 const mapDispatchToProps = (dispatch) => ({
-  emailLogin: (email) => dispatch(setLogin(email)),
+  emailLogin: (payload) => dispatch(setLogin(payload)),
 });
 Login.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
-  emailLogin: PropTypes.string.isRequired,
+  emailLogin: PropTypes.func.isRequired,
 };
 
 export default connect(null, mapDispatchToProps)(Login);
