@@ -12,6 +12,7 @@ class Header extends React.Component {
           TrybeWallet
         </div>
         <div data-testid="email-field">
+          Email:
           {email}
         </div>
         <div data-testid="total-field">
