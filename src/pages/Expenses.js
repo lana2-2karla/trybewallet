@@ -1,14 +1,19 @@
 import React from 'react';
+import propTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { setExpenses } from '../actions';
 
 class Expenses extends React.Component {
   constructor() {
     super();
     this.state = {
-      currencies: '',
+      exchangeRates: '',
       value: '',
+      description: '',
       currency: '',
       method: '',
       tag: '',
+      id: 0,
     };
     this.fetchJSON = this.fetchJSON.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -23,7 +28,7 @@ class Expenses extends React.Component {
     const response = await fetch(URL);
     const getCurrencies = await response.json();
     this.setState({
-      currencies: getCurrencies,
+      exchangeRates: getCurrencies,
     });
   }
 
@@ -33,9 +38,17 @@ class Expenses extends React.Component {
     });
   }
 
+  handleclick(event) {
+    event.PreventDefault();
+    const { walletExpenses, expenses } = this.props;
+    this.setState({
+      id: expenses.length + 1,
+    });
+    walletExpenses(this.sate);
+  }
+
   render() {
-    const { currencies } = this.state;
-    console.log(this.state);
+    const { exchangeRates } = this.state;
     return (
       <div>
         <form>
@@ -50,6 +63,16 @@ class Expenses extends React.Component {
               onChange={ this.handleChange }
             />
           </label>
+          <label htmlFor="description-input">
+            Descrição:
+            <input
+              data-testid="description-input"
+              type="text"
+              id="description-input"
+              name="description"
+              onChange={ this.handleChange }
+            />
+          </label>
           <label htmlFor="currency-input">
             Moeda:
             <select
@@ -58,7 +81,8 @@ class Expenses extends React.Component {
               id="currency-input"
               onChange={ this.handleChange }
             >
-              {Object.keys(currencies)
+              {Object.keys(exchangeRates)
+                .filter((currency) => currency !== 'USDT')
                 .map((currency) => (
                   <option key={ currency } value={ currency }>{ currency }</option>
                 ))}
@@ -94,6 +118,7 @@ class Expenses extends React.Component {
           </label>
           <button
             type="submit"
+            onClick={ this.handleClick }
           >
             Adicionar despesa
           </button>
@@ -103,4 +128,16 @@ class Expenses extends React.Component {
   }
 }
 
-export default Expenses;
+const mapDispatchToProps = (dispatch) => ({
+  walletExpenses: (payload) => dispatch(setExpenses(payload)),
+});
+
+const mapStateToProps = (state) => ({
+  expenses: state.wallet.expenses,
+});
+Expenses.propTypes = {
+  walletExpenses: propTypes.func.isRequired,
+  expenses: propTypes.arrayOf().isRequired,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Expenses);
