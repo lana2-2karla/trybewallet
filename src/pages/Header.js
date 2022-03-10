@@ -9,7 +9,7 @@ class Header extends React.Component {
       let sun = 0;
       if (expenses[0] !== undefined) {
         expenses.forEach(({ value, exchangeRates, currency }) => {
-          sun += Number(value) * Number(exchangeRates(currency).ask);
+          sun += Number(value) * Number(exchangeRates[currency].ask);
         });
       }
       return sun;
@@ -39,5 +39,6 @@ const mapStateToProps = (state) => ({
 });
 Header.propTypes = {
   email: propTypes.string.isRequired,
+  expenses: propTypes.arrayOf(propTypes.object).isRequired,
 };
 export default connect(mapStateToProps)(Header);

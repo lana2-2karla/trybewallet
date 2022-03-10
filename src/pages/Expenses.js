@@ -13,10 +13,11 @@ class Expenses extends React.Component {
       currency: '',
       method: '',
       tag: '',
-      id: 0,
+      id: -1,
     };
     this.fetchJSON = this.fetchJSON.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleclick = this.handleclick.bind(this);
   }
 
   componentDidMount() {
@@ -30,6 +31,7 @@ class Expenses extends React.Component {
     this.setState({
       exchangeRates: getCurrencies,
     });
+    return getCurrencies;
   }
 
   handleChange({ target: { name, value } }) {
@@ -38,17 +40,25 @@ class Expenses extends React.Component {
     });
   }
 
-  handleclick(event) {
-    event.PreventDefault();
-    const { walletExpenses, expenses } = this.props;
+  async handleclick(event) {
+    const api = await this.fetchJSON();
+    event.preventDefault();
+    const { walletExpenses } = this.props;
+    console.log(walletExpenses);
+    this.setState((prevState) => ({
+      id: prevState.id + 1,
+      exchangeRates: api,
+
+    }));
+    walletExpenses(this.state);
     this.setState({
-      id: expenses.length + 1,
+      value: '',
+      description: '',
     });
-    walletExpenses(this.sate);
   }
 
   render() {
-    const { exchangeRates } = this.state;
+    const { exchangeRates, value, description } = this.state;
     return (
       <div>
         <form>
@@ -59,6 +69,7 @@ class Expenses extends React.Component {
               type="number"
               id="value-input"
               name="value"
+              value={ value }
               placeholder=""
               onChange={ this.handleChange }
             />
@@ -70,6 +81,7 @@ class Expenses extends React.Component {
               type="text"
               id="description-input"
               name="description"
+              value={ description }
               onChange={ this.handleChange }
             />
           </label>
@@ -84,7 +96,14 @@ class Expenses extends React.Component {
               {Object.keys(exchangeRates)
                 .filter((currency) => currency !== 'USDT')
                 .map((currency) => (
-                  <option key={ currency } value={ currency }>{ currency }</option>
+                  <option
+                    data-testid={ currency }
+                    key={ currency }
+                    value={ currency }
+                  >
+                    { currency }
+
+                  </option>
                 ))}
             </select>
           </label>
@@ -96,9 +115,9 @@ class Expenses extends React.Component {
               id="method-input"
               onChange={ this.handleChange }
             >
-              <option value="valor1">Dinehiro</option>
-              <option value="valor2">Cartão de Débito</option>
-              <option value="valor3">Cartão de Crédito</option>
+              <option value="Dinheiro">Dinheiro</option>
+              <option value="Cartão de débito">Cartão de débito</option>
+              <option value="Cartão de crédito">Cartão de crédito</option>
             </select>
           </label>
           <label htmlFor="tag-input">
@@ -109,16 +128,16 @@ class Expenses extends React.Component {
               id="tag-input"
               onChange={ this.handleChange }
             >
-              <option value="valor1">Alimentação</option>
-              <option value="valor2">Transporte</option>
-              <option value="valor3">Lazer</option>
-              <option value="valor4">Saúde</option>
-              <option value="valor5">Trabalho</option>
+              <option value="Alimentação">Alimentação</option>
+              <option value="Transporte">Transporte</option>
+              <option value="Lazer">Lazer</option>
+              <option value="Saúde">Saúde</option>
+              <option value="Trabalho">Trabalho</option>
             </select>
           </label>
           <button
-            type="submit"
-            onClick={ this.handleClick }
+            type="button"
+            onClick={ this.handleclick }
           >
             Adicionar despesa
           </button>
@@ -137,7 +156,7 @@ const mapStateToProps = (state) => ({
 });
 Expenses.propTypes = {
   walletExpenses: propTypes.func.isRequired,
-  expenses: propTypes.arrayOf().isRequired,
+  // expenses: propTypes.arrayOf().isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Expenses);
