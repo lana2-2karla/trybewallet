@@ -9,7 +9,7 @@ class Header extends React.Component {
       let sun = 0;
       if (expenses[0] !== undefined) {
         expenses.forEach(({ value, exchangeRates, currency }) => {
-          sun += Number(value) * Number(exchangeRates[currency].ask);
+          (sun += value * exchangeRates[currency].ask);
         });
       }
       return sun;
