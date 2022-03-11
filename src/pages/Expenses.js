@@ -3,6 +3,7 @@ import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { setExpenses } from '../actions';
 
+// Seper ajuda de Elimar Lucena e Laecio Silva Turma XP Tribo B
 class Expenses extends React.Component {
   constructor() {
     super();
@@ -44,7 +45,6 @@ class Expenses extends React.Component {
     const api = await this.fetchJSON();
     event.preventDefault();
     const { walletExpenses } = this.props;
-    console.log(walletExpenses);
     this.setState((prevState) => ({
       id: prevState.id + 1,
       exchangeRates: api,
